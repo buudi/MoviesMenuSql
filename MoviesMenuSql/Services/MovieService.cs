@@ -5,40 +5,15 @@ namespace MoviesMenuSql.Services;
 
 internal class MovieService
 {
-
     private DbService dbService = new();
-    List<Movie> movies = [];
+    private List<Movie> movies = [];
 
     public MovieService()
     {
-        using (SqlConnection connection = dbService.GetConnection())
+        List<Movie> initialMovies = dbService.GetInitialMovies();
+        foreach (Movie movie in initialMovies)
         {
-            connection.Open();
-            Console.WriteLine("Connection opened successfully.");
-
-            string selectQuery = "SELECT * FROM Movies";
-            SqlCommand command = new(selectQuery, connection);
-
-            SqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                var movie = new Movie
-                (
-                    (int)reader["Id"],
-                    (string)reader["Title"],
-                    (string)reader["Director"],
-                    (string)reader["Genre"],
-                    (int)reader["ReleaseYear"],
-                    (decimal)reader["Price"]
-                );
-
-                movies.Add(movie);
-            }
-            reader.Close();
-
-            connection.Close();
-            Console.WriteLine("Connection closed.");
+            movies.Add(movie);
         }
     }
 
@@ -53,6 +28,20 @@ internal class MovieService
         movies.Add(movie);
         return "Movie added successfully.";
     }
+
+    //public string AddMovie(Movie movie)
+    //{
+    //    using SqlConnection connection = dbService.GetConnection();
+    //    try
+    //    {
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        throw new Exception();
+    //    }
+
+    //}
 
     public string ModifyMovie(Movie updatedMovie)
     {
