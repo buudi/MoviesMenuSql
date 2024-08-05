@@ -124,7 +124,17 @@ internal class MovieConsoleService
     public void ModifyMovie()
     {
         Console.Clear();
-        Console.Write(_movieService.ListAllMovies());
+
+        var moviesToPrint = new List<Movie>();
+        foreach (Movie movie in _movieService.ListAllMovies())
+            moviesToPrint.Add(movie);
+
+        IEnumerable<string> listMovieQuery =
+            from movie in moviesToPrint
+            select $"Id: {movie.Id}, Title: {movie.Title}, Director: {movie.Director}, Genre: {movie.Genre}, Release Year: {movie.ReleaseYear}, Price: {movie.Price}";
+
+        foreach (string movie in listMovieQuery)
+            Console.WriteLine(movie);
 
         int id;
         while (true)
@@ -182,7 +192,17 @@ internal class MovieConsoleService
     public void RemoveMovie()
     {
         Console.Clear();
-        Console.Write(_movieService.ListAllMovies());
+
+        var moviesToPrint = new List<Movie>();
+        foreach (Movie movie in _movieService.ListAllMovies())
+            moviesToPrint.Add(movie);
+
+        IEnumerable<string> listMovieQuery =
+            from movie in moviesToPrint
+            select $"Id: {movie.Id}, Title: {movie.Title}, Director: {movie.Director}, Genre: {movie.Genre}, Release Year: {movie.ReleaseYear}, Price: {movie.Price}";
+
+        foreach (string movie in listMovieQuery)
+            Console.WriteLine(movie);
 
         Console.WriteLine("\n\nEnter the ID of the movie to delete: ");
 

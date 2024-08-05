@@ -1,5 +1,6 @@
 ﻿using MoviesMenuSql.Models;
 using System.Data.SqlClient;
+using System.Net.NetworkInformation;
 
 namespace MoviesMenuSql.Services;
 
@@ -45,7 +46,6 @@ internal class MovieService
             insertCommand.Parameters.AddWithValue("@Price", movie.Price);
 
             int result = insertCommand.ExecuteNonQuery();
-
             updateInitialMoviesList();
 
             string successMsg = $"{movie.Title} added to the database successfully!";
@@ -63,27 +63,72 @@ internal class MovieService
 
     public string ModifyMovie(Movie updatedMovie)
     {
-        var movie = movies.FirstOrDefault(m => m.Id == updatedMovie.Id);
-        if (movie == null)
-            return "Movie not found.";
+        using SqlConnection connection = dbService.GetConnection();
+        try
+        {
+            connection.Open();
+
+            string updateQuery = "UPDATE Movies SET Title=@Title, Director=@Director, Genre=@Genre, ReleaseYear=@ReleaseYear, Price=@Price WHERE Id=@Id";
+            SqlCommand updateCommand = new(updateQuery, connection);
+            updateCommand.Parameters.AddWithValue("@Title", updatedMovie.Title);
+            updateCommand.Parameters.AddWithValue("@Director", updatedMovie.Director);
+            updateCommand.Parameters.AddWithValue("@Genre", updatedMovie.Genre);
+            updateCommand.Parameters.AddWithValue("@ReleaseYear", updatedMovie.ReleaseYear);
+            updateCommand.Parameters.AddWithValue("@Price", updatedMovie.Price);
+            updateCommand.Parameters.AddWithValue("@Id", updatedMovie.Id);
 
 
-        movie.Title = updatedMovie.Title;
-        movie.Director = updatedMovie.Director;
-        movie.Genre = updatedMovie.Genre;
-        movie.ReleaseYear = updatedMovie.ReleaseYear;
-        movie.Price = updatedMovie.Price;
-        return "Movie updated successfully.";
+            int result = updateCommand.ExecuteNonQuery();
+            updateInitialMoviesList();
+
+            string successMsg = $"{updatedMovie.Title} modified in the database successfully!";
+            return successMsg + $" {result} rows updated.";
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.ToString());
+        }
+        finally
+        {
+            connection.Close();
+        }
     }
+    //public string RemoveMovie(int? id)
+    //{
+    //    var movie = movies.FirstOrDefault(m => m.Id == id);
+    //    if (movie == null)
+    //        return "Movie not found.";
+
+    //    movies.Remove(movie);
+    //    return $"Movie: {movie.Title} removed from the list";
+    //}
 
     public string RemoveMovie(int? id)
     {
-        var movie = movies.FirstOrDefault(m => m.Id == id);
-        if (movie == null)
-            return "Movie not found.";
+        using SqlConnection connection = dbService.GetConnection();
+        try
+        {
+            connection.Open();
+            string deleteQuery = "DELETE FROM Movies WHERE Id = @Id";
+            SqlCommand deleteCommand = new(deleteQuery, connection);
 
-        movies.Remove(movie);
-        return $"Movie: {movie.Title} removed from the list";
+            deleteCommand.Parameters.AddWithValue("@Id", id);
+            int result = deleteCommand.ExecuteNonQuery();
+            updateInitialMoviesList();
+
+            string successMsg = $" Movie with Id: {id} deleted from the database successfully!";
+            return successMsg + $" {result} rows deleted.";
+
+
+        }
+        catch (Exception ex)
+        { 
+            throw new Exception(ex.ToString()); 
+        }
+        finally
+        {
+            connection.Close();
+        }
     }
 
     public bool CheckMovieExists(int? id)
