@@ -53,7 +53,18 @@ internal class MovieConsoleService
     public void ListAllMovies()
     {
         Console.Clear();
-        Console.Write(_movieService.ListAllMovies());
+
+        var moviesToPrint = new List<Movie>();
+        foreach (Movie movie in _movieService.ListAllMovies())
+            moviesToPrint.Add(movie);
+
+        IEnumerable<string> listMovieQuery =
+            from movie in moviesToPrint
+            select $"Id: {movie.Id}, Title: {movie.Title}, Director: {movie.Director}, Genre: {movie.Genre}, Release Year: {movie.ReleaseYear}, Price: {movie.Price}";
+
+        foreach (string movie in listMovieQuery)
+            Console.WriteLine(movie);
+
         Console.WriteLine("\n\nPress 'b' to go back to the main menu.");
 
         while (true)
@@ -87,11 +98,11 @@ internal class MovieConsoleService
             Console.WriteLine("Invalid input. Please enter a valid release year.");
         }
 
-        double price;
+        decimal price;
         while (true)
         {
             Console.WriteLine("Enter price:");
-            if (double.TryParse(Console.ReadLine(), out price))
+            if (decimal.TryParse(Console.ReadLine(), out price))
                 break;
 
             Console.WriteLine("Invalid input. Please enter a valid price.");
@@ -144,11 +155,11 @@ internal class MovieConsoleService
             Console.WriteLine("Invalid input. Please enter a valid release year.");
         }
 
-        double price;
+        decimal price;
         while (true)
         {
             Console.WriteLine("Enter price:");
-            if (double.TryParse(Console.ReadLine(), out price))
+            if (decimal.TryParse(Console.ReadLine(), out price))
                 break;
 
             Console.WriteLine("Invalid input. Please enter a valid price.");

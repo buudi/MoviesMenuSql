@@ -1,30 +1,50 @@
 ﻿using MoviesMenuSql.Models;
+using System.Data.SqlClient;
 
 namespace MoviesMenuSql.Services;
 
 internal class MovieService
 {
-    List<Movie> movies;
+
+    private DbService dbService = new();
+    List<Movie> movies = [];
+
     public MovieService()
     {
-        movies = [
-            new Movie(1, "Inception", "Christopher Nolan", "Sci-fi/Action", 2010, 24.99),
-            new Movie(2, "The Matrix", "Lilly Wachowski", "Sci-fi/Action", 1999, 19.99),
-            new Movie(3, "Inside Job", "Charles Ferguson", "Crime", 2010, 12.49)
-         ];
+        using (SqlConnection connection = dbService.GetConnection())
+        {
+            connection.Open();
+            Console.WriteLine("Connection opened successfully.");
+
+            string selectQuery = "SELECT * FROM Movies";
+            SqlCommand command = new(selectQuery, connection);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var movie = new Movie
+                (
+                    (int)reader["Id"],
+                    (string)reader["Title"],
+                    (string)reader["Director"],
+                    (string)reader["Genre"],
+                    (int)reader["ReleaseYear"],
+                    (decimal)reader["Price"]
+                );
+
+                movies.Add(movie);
+            }
+            reader.Close();
+
+            connection.Close();
+            Console.WriteLine("Connection closed.");
+        }
     }
 
-    public string ListAllMovies()
+    public List<Movie> ListAllMovies ()
     {
-        if (!movies.Any())
-        {
-            return "No movies available.";
-        }
-
-        var result = from movie in movies
-                     select $"ID: {movie.Id}, Title: {movie.Title}, Director: {movie.Director}, Genre: {movie.Genre}, Year: {movie.ReleaseYear}, Price: {movie.Price}";
-
-        return "Movies:\n\n" + string.Join("\n", result);
+        return movies;
     }
 
     public string AddMovie(Movie movie)
