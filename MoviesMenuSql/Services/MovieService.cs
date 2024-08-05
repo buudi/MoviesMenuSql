@@ -18,14 +18,6 @@ internal class MovieService
     }
 
     public List<Movie> ListAllMovies() => movies;
-    
-
-    //public string AddMovie(Movie movie)
-    //{
-    //    movie.Id = movies.Count + 1;
-    //    movies.Add(movie);
-    //    return "Movie added successfully.";
-    //}
 
     public string AddMovie(Movie movie)
     {
@@ -93,15 +85,6 @@ internal class MovieService
             connection.Close();
         }
     }
-    //public string RemoveMovie(int? id)
-    //{
-    //    var movie = movies.FirstOrDefault(m => m.Id == id);
-    //    if (movie == null)
-    //        return "Movie not found.";
-
-    //    movies.Remove(movie);
-    //    return $"Movie: {movie.Title} removed from the list";
-    //}
 
     public string RemoveMovie(int? id)
     {
