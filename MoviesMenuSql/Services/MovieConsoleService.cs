@@ -7,7 +7,7 @@ namespace MoviesMenuSql.Services;
 internal class MovieConsoleService
 {
     private readonly MovieService _movieService;
-    private DbService _dbService = new DbService();
+    private DbService dbService = new();
 
     public MovieConsoleService(MovieService movieService) => _movieService = movieService;
 
@@ -201,7 +201,7 @@ internal class MovieConsoleService
     {
         Console.Clear();
 
-        using (SqlConnection connection = _dbService.GetConnection())
+        using (SqlConnection connection = dbService.GetConnection())
         {
             try
             {
@@ -214,10 +214,8 @@ internal class MovieConsoleService
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
-                {
                     Console.WriteLine($"Id: {reader["id"]}, Name: {reader["name"]}, Created: {reader["CreateDateTime"]}");
-                    // Console.WriteLine($"{reader["name"]}");
-                }
+                
                 reader.Close();
             }
             catch (Exception ex)
@@ -230,10 +228,6 @@ internal class MovieConsoleService
                 Console.WriteLine("Connection closed.");
             }
         }
-
-        //Console.WriteLine("Names will be printed Here");
-
-
 
         Console.WriteLine("\n\nPress 'b' to go back to the main menu.");
 
