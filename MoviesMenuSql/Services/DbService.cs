@@ -17,7 +17,7 @@ public class DbService
         {
             connection.Open();
 
-            string selectQuery = "SELECT * FROM Moviess";
+            string selectQuery = "SELECT * FROM Movies";
             SqlCommand command = new(selectQuery, connection);
 
             SqlDataReader reader = command.ExecuteReader();
