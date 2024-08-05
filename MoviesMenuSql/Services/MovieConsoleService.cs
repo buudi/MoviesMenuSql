@@ -9,10 +9,7 @@ internal class MovieConsoleService
     private readonly MovieService _movieService;
     private DbService _dbService = new DbService();
 
-    public MovieConsoleService(MovieService movieService)
-    {
-        _movieService = movieService;
-    }
+    public MovieConsoleService(MovieService movieService) => _movieService = movieService;
 
     public void DisplayMenu(List<Option> menuOptions, int selectedIndex)
     {
