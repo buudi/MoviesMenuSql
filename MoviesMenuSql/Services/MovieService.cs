@@ -21,6 +21,17 @@ internal class MovieService
 
     public string AddMovie(Movie movie)
     {
+        //OLDEST WAY
+        var phoneConnection = new PhoneConnection();
+        phoneConnection.Dispose();
+
+        //USING STATEMET
+        using(var phoneConnection1 = new PhoneConnection())
+        {
+
+        }
+
+        using var phoneCOnnection2 = new PhoneConnection();
         using SqlConnection connection = dbService.GetConnection();
         try
         {
