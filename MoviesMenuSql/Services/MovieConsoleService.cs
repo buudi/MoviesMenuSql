@@ -253,11 +253,6 @@ internal class MovieConsoleService
             {
                 Console.WriteLine("Error: " + ex.Message);
             }
-            finally
-            {
-                connection.Close();
-                Console.WriteLine("Connection closed.");
-            }
         }
 
         Console.WriteLine("\n\nPress 'b' to go back to the main menu.");

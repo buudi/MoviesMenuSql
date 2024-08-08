@@ -42,10 +42,6 @@ public class DbService
         {
             throw new Exception(ex.ToString());
         }
-        finally
-        {
-            connection.Close();
-        }
 
         return movies;
     }

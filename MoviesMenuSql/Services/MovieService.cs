@@ -21,25 +21,14 @@ internal class MovieService
 
     public string AddMovie(Movie movie)
     {
-        //OLDEST WAY
-        var phoneConnection = new PhoneConnection();
-        phoneConnection.Dispose();
-
-        //USING STATEMET
-        using(var phoneConnection1 = new PhoneConnection())
-        {
-
-        }
-
-        using var phoneCOnnection2 = new PhoneConnection();
         using SqlConnection connection = dbService.GetConnection();
         try
         {
             connection.Open();
 
             string insertQuery = @"
-                INSERT INTO Movies (Title, Director, ReleaseYear, Genre, Price)
-                VALUES (@Title, @Director, @ReleaseYear, @Genre, @Price)";
+            INSERT INTO Movies (Title, Director, ReleaseYear, Genre, Price)
+            VALUES (@Title, @Director, @ReleaseYear, @Genre, @Price)";
 
             SqlCommand insertCommand = new(insertQuery, connection);
             insertCommand.Parameters.AddWithValue("@Title", movie.Title);
@@ -57,10 +46,6 @@ internal class MovieService
         catch (Exception ex)
         {
             throw new Exception(ex.ToString());
-        }
-        finally
-        {
-            connection.Close();
         }
     }
 
@@ -91,10 +76,6 @@ internal class MovieService
         {
             throw new Exception(ex.ToString());
         }
-        finally
-        {
-            connection.Close();
-        }
     }
 
     public string RemoveMovie(int? id)
@@ -116,18 +97,10 @@ internal class MovieService
 
         }
         catch (Exception ex)
-        { 
-            throw new Exception(ex.ToString()); 
-        }
-        finally
         {
-            connection.Close();
+            throw new Exception(ex.ToString());
         }
     }
 
-    public bool CheckMovieExists(int? id)
-    {
-        return movies.Any(m => m.Id == id);
-    }
-
+    public bool CheckMovieExists(int? id) => movies.Any(m => m.Id == id);
 }
